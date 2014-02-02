@@ -16,7 +16,6 @@ import operator
 import threading
 import urllib2
 from multiprocessing.pool import ThreadPool
-from authentication import USERNAME, PASSWORD
 
 pool = ThreadPool(processes=1)
 delayedComments = []
