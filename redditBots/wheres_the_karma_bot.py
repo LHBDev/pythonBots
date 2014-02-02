@@ -19,11 +19,12 @@ from multiprocessing.pool import ThreadPool
 
 pool = ThreadPool(processes=1)
 delayedComments = []
+phrase = "karma5:"
 
 #Login
 r = praw.Reddit('Karma breakdown Bot by u/elotro v 1.5'
                 'github.com/LHBDev/pythonBots/redditBots')
-r.login('throwawayelotro', 'srs09vali1')
+r.login(USERNAME, PASSWORD)
 
 footer = "\n ** \n Delivered by a bot!\n **"
 #read old ids
@@ -138,7 +139,7 @@ def loop():
                 for submission in submissions:
                     for comment in submission.comments:
                         #check if comment is calling our bot
-                        if "karma5:" in comment.body.lower():
+                        if phrase in comment.body.lower():
                             threading.Thread(target=check_comment, args=(comment,)).start()
 
                 #Sleep 5 minutes so we don't overload Reddit's servers
