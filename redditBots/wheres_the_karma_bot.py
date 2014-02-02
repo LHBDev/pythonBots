@@ -16,6 +16,7 @@ import operator
 import threading
 import urllib2
 from multiprocessing.pool import ThreadPool
+from authentication import USERNAME, PASSWORD
 
 pool = ThreadPool(processes=1)
 delayedComments = []
@@ -23,7 +24,7 @@ delayedComments = []
 #Login
 r = praw.Reddit('Karma breakdown Bot by u/elotro v 1.5'
                 'github.com/LHBDev/pythonBots/redditBots')
-r.login('throwawayelotro', 'srs09vali1')
+r.login(USERNAME, PASSWORD)
 
 footer = "\n ** \n Delivered by a bot!\n **"
 #read old ids
