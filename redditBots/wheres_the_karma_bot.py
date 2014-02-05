@@ -20,13 +20,14 @@ from multiprocessing.pool import ThreadPool
 pool = ThreadPool(processes=1)
 delayedComments = []
 phrase = "karma5:"
+targetSubs = 'LHBDevbottestsub+LearnPython+python'
 
 #Login
 r = praw.Reddit('Karma breakdown Bot by u/elotro v 1.5'
                 'github.com/LHBDev/pythonBots/redditBots')
-r.login(USERNAME, PASSWORD)
+r.login('wheres_the_karma_bot', 'srs09vali1')
 
-footer = "\n ** \n Delivered by a bot!\n **"
+footer = "\n ** \n Delivered by a bot!\n Usage: karma5: redditor1**"
 #read old ids
 with open('oldIDs.txt', 'r') as f:
     oldReplies = [line.strip() for line in f]
@@ -59,10 +60,15 @@ def check_comment(comment):
             if not value == "":
                 value = value.replace(" ", "")
                 async_result = pool.apply_async(lookup_user, (value,))
-                res = async_result.get()
-                #print res
-                if res != "Not found":
-                    res = print_pretty(res)
+                try:
+                    res = async_result.get()
+                    #print res
+                    if res != "Not found":
+                        res = print_pretty(res)
+                        threading.Thread(target=send_reply, args=(comment, res)).start()
+                        threading.Thread(target=save_id, args=(comment,)).start()
+                except urllib2.HTTPError:
+                    res = "Not Found"
                     threading.Thread(target=send_reply, args=(comment, res)).start()
                     threading.Thread(target=save_id, args=(comment,)).start()
 
@@ -135,13 +141,18 @@ def loop():
         else:
             try:
                 #grab comments
-                submissions = r.get_subreddit('LHBDevbottestsub').get_top(limit=20)
+                submissions = r.get_subreddit(targetSubs).get_hot(limit=100)
+
                 for submission in submissions:
+
                     for comment in submission.comments:
                         #check if comment is calling our bot
                         if phrase in comment.body.lower():
                             threading.Thread(target=check_comment, args=(comment,)).start()
-
+                        if comment.replies:
+                            for reply in comment.replies:
+                                if phrase in reply.body.lower():
+                                    threading.Thread(target=check_comment, args=(reply,)).start()
                 #Sleep 5 minutes so we don't overload Reddit's servers
                 time.sleep(300)
             except Exception as e:
