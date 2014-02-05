@@ -25,7 +25,7 @@ targetSubs = 'LHBDevbottestsub+LearnPython+python'
 #Login
 r = praw.Reddit('Karma breakdown Bot by u/elotro v 1.5'
                 'github.com/LHBDev/pythonBots/redditBots')
-r.login('wheres_the_karma_bot', 'srs09vali1')
+r.login(USERNAME, PASSWORD)
 
 footer = "\n ** \n Delivered by a bot!\n Usage: karma5: redditor1**"
 #read old ids
